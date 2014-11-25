@@ -13,11 +13,16 @@ import spock.lang.Specification
 import static org.hamcrest.Matchers.hasSize
 import static org.hamcrest.Matchers.is
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 
 @ContextConfiguration(loader = SpringApplicationContextLoader, classes = Application)
 @WebAppConfiguration
 class GreetingControllerSpec extends Specification {
+
+    static String path(String id = "") {
+        return "/greeting/$id"
+    }
 
     GreetingService greetingServiceMock
     GreetingController controller
@@ -38,7 +43,7 @@ class GreetingControllerSpec extends Specification {
         greetingServiceMock.getAllGreetings() >> greetings
 
         when:
-        def response = mockMvc.perform(get('/greeting/'))
+        def response = mockMvc.perform(get(path()))
 
         then:
         response
@@ -52,11 +57,11 @@ class GreetingControllerSpec extends Specification {
 
     def "it has a show action that shows a single greeting"() {
         given:
-        def greeting = new Greeting('test', 'test')
+        def greeting = new Greeting('id', 'content')
         greetingServiceMock.getGreetingById(greeting.id) >> greeting
 
         when:
-        def response = mockMvc.perform(get("/greeting/${greeting.id}"))
+        def response = mockMvc.perform(get(path(greeting.id)))
 
         then:
         response
@@ -65,5 +70,44 @@ class GreetingControllerSpec extends Specification {
             .andExpect(jsonPath('$.content', is(greeting.content)))
 
     }
+
+    def "it has an add action that creates a greeting"() {
+        given:
+        def greeting = new Greeting('id', 'content')
+        greetingServiceMock.createGreeting(greeting.content) >> greeting
+
+        when:
+        def response = mockMvc.perform(post(path())
+            .param('content', greeting.content))
+
+        then:
+        response
+            .andExpect(status().is3xxRedirection())
+            .andExpect(redirectedUrl(path(greeting.id)))
+    }
+
+    /*
+        This concept needs some more thought
+        ... might be overkill
+    */
+    //    @Unroll
+    //    def "#path #allows #method"() {
+    //        setup:
+    //        //greetingServiceMock.getAllGreetings() >> []
+    //
+    //        expect:
+    //        mockMvc.perform(request).andExpect(response)
+    //
+    //        where:
+    //        request            | response                    | path       | method   | allows
+    //        get(path())        | status().isOk()             | path()     | 'GET'    | 'allows'
+    //        post(path()).param('content', 'content')       | status().is3xxRedirection() | path()     | 'POST'   | 'allows'
+    //        put(path())        | status().is4xxClientError() | path()     | 'PUT'    | 'blocks'
+    //        delete(path())     | status().is4xxClientError() | path()     | 'DELETE' | 'blocks'
+    //        get(path('id'))    | status().isOk()             | path('id') | 'GET'    | 'allows'
+    //        post(path('id'))   | status().is4xxClientError() | path('id') | 'POST'   | 'blocks'
+    //        put(path('id'))    | status().is3xxRedirection() | path('id') | 'PUT'    | 'allows'
+    //        delete(path('id')) | status().isOk()             | path('id') | 'DELETE' | 'allows'
+    //    }
 
 }
