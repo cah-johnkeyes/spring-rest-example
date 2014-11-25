@@ -4,7 +4,6 @@ import hello.domain.Greeting
 import hello.repository.GreetingStore
 import spock.lang.Specification
 
-//@ContextConfiguration(loader = SpringApplicationContextLoader, classes = Application)
 class GreetingServiceSpec extends Specification {
 
     GreetingService service

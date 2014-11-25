@@ -17,7 +17,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ContextConfiguration(loader = SpringApplicationContextLoader, classes = Application)
 @WebAppConfiguration
-//@IntegrationTest(["server.port=3000", "management.port=3001"])
 class GreetingControllerSpec extends Specification {
 
     GreetingService greetingServiceMock
