@@ -9,7 +9,7 @@ buildscript {
     }
 }
 
-apply plugin: 'java'
+apply plugin: 'groovy'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'spring-boot'
@@ -26,8 +26,17 @@ repositories {
 }
 
 dependencies {
-    compile "org.springframework.boot:spring-boot-starter-web"
+    compile("org.springframework.boot:spring-boot-starter-web"){
+        exclude module: "spring-boot-starter-tomcat"
+    }
+    compile("org.springframework.boot:spring-boot-starter-jetty")
     compile "org.codehaus.groovy:groovy-all:2.3.6"
 
-    testCompile "org.spockframework:spock-core:1.0-groovy-2.3-SNAPSHOT"
+    testCompile "org.spockframework:spock-core:0.7-groovy-2.0"
+    testCompile "org.spockframework:spock-spring:0.7-groovy-2.0"
+    testCompile "org.springframework:spring-test"
+    testCompile "org.springframework.boot:spring-boot-starter-test"
+    testCompile "cglib:cglib:2.2" // required for spock mocking of non-interfaced classes
+
+
 }

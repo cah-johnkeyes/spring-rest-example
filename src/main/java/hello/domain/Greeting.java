@@ -15,10 +15,6 @@ public class Greeting {
         this.dateCreated = new Date();
     }
 
-    public Greeting(String content) {
-        this(UUID.randomUUID().toString(), content);
-    }
-
     public String getId() {
         return id;
     }
@@ -33,6 +29,17 @@ public class Greeting {
 
     public Date getDateCreated() {
         return dateCreated;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj != null
+            && obj instanceof Greeting
+            && equals((Greeting) obj);
+    }
+
+    public boolean equals(Greeting greeting) {
+        return greeting.getId().equals(getId());
     }
 
 }

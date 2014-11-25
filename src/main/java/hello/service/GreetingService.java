@@ -1,17 +1,21 @@
 package hello.service;
 
-import java.util.UUID;
-import java.util.List;
-import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
-import hello.repository.GreetingStore;
 import hello.domain.Greeting;
+import hello.repository.GreetingStore;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class GreetingService {
 
     @Autowired
     private GreetingStore greetingStore;
+
+    public void setGreetingStore(GreetingStore greetingStore) {
+        this.greetingStore = greetingStore;
+    }
 
     public List<Greeting> getAllGreetings() {
         return greetingStore.list();
@@ -28,7 +32,7 @@ public class GreetingService {
     }
 
     public Greeting createGreeting(String content) {
-        Greeting greeting = new Greeting(content);
+        Greeting greeting = new Greeting(greetingStore.nextId(), content);
         greetingStore.add(greeting);
         return greeting;
     }

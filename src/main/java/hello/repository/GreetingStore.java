@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 public class GreetingStore {
@@ -13,7 +14,7 @@ public class GreetingStore {
     private HashMap<String, Greeting> greetings;
 
     public GreetingStore() {
-        greetings = new HashMap<String, Greeting>();
+        greetings = new HashMap<>();
     }
 
     public Greeting get(String id) {
@@ -33,7 +34,11 @@ public class GreetingStore {
     }
 
     public List<Greeting> list() {
-        return new ArrayList<Greeting>(greetings.values());
+        return new ArrayList<>(greetings.values());
+    }
+
+    public String nextId() {
+        return UUID.randomUUID().toString();
     }
 
 }
