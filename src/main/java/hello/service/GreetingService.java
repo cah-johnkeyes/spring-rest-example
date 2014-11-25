@@ -13,10 +13,6 @@ public class GreetingService {
     @Autowired
     private GreetingStore greetingStore;
 
-    public void setGreetingStore(GreetingStore greetingStore) {
-        this.greetingStore = greetingStore;
-    }
-
     public List<Greeting> getAllGreetings() {
         return greetingStore.list();
     }
@@ -36,6 +32,5 @@ public class GreetingService {
         greetingStore.add(greeting);
         return greeting;
     }
-
 
 }

@@ -11,9 +11,8 @@ class GreetingServiceSpec extends Specification {
     GreetingStore greetingStoreMock
 
     def setup() {
-        service = new GreetingService()
         greetingStoreMock = Mock(GreetingStore)
-        service.greetingStore = greetingStoreMock
+        service = new GreetingService(greetingStore: greetingStoreMock)
     }
 
     def "it returns the proper greeting when given a greeting id"() {
