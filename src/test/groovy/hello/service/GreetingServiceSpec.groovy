@@ -17,7 +17,7 @@ class GreetingServiceSpec extends Specification {
     }
 
     def "it returns the proper greeting when given a greeting id"() {
-        setup:
+        given:
         def greeting = new Greeting('test', 'test')
         greetingStoreMock.get(greeting.id) >> greeting
 
@@ -29,7 +29,7 @@ class GreetingServiceSpec extends Specification {
     }
 
     def "it lists all the greetings"() {
-        setup:
+        given:
         def greetings = [
             new Greeting('one', 'one'),
             new Greeting('two', 'two')
@@ -44,19 +44,19 @@ class GreetingServiceSpec extends Specification {
     }
 
     def "it creates new greetings"() {
-        setup:
+        given:
         def greeting = new Greeting('test', 'test')
+        greetingStoreMock.nextId() >> greeting.id
 
         when:
         service.createGreeting(greeting.content)
 
         then:
-        1 * greetingStoreMock.nextId() >> greeting.id
         1 * greetingStoreMock.add(greeting)
     }
 
     def "it updates greetings when given a greeting id and new content"() {
-        setup:
+        given:
         def greeting = new Greeting('test', 'test')
         greetingStoreMock.get(greeting.id) >> greeting
 

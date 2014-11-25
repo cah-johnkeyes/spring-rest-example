@@ -37,6 +37,7 @@ dependencies {
     testCompile "org.springframework:spring-test"
     testCompile "org.springframework.boot:spring-boot-starter-test"
     testCompile "cglib:cglib:2.2" // required for spock mocking of non-interfaced classes
+    testCompile "com.jayway.jsonpath:json-path-assert:0.8.1" // required for hamcrest matching
 
 
 }
