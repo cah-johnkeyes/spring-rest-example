@@ -1,36 +1,41 @@
 package hello.service;
 
 import hello.domain.Greeting;
-import hello.repository.GreetingStore;
+import hello.repository.GreetingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class GreetingService {
 
     @Autowired
-    private GreetingStore greetingStore;
+    private GreetingRepository repository;
 
-    public List<Greeting> getAllGreetings() {
-        return greetingStore.list();
+    public Iterable<Greeting> getAllGreetings() {
+        return repository.findAll();
     }
 
-    public Greeting getGreetingById(String id) {
-        return greetingStore.get(id);
+    public Greeting getGreetingById(Long id) {
+        return repository.findOne(id);
     }
 
-    public void updateGreeting(String id, String content) {
-        Greeting greeting = greetingStore.get(id);
-        greeting.setContent(content);
-        greetingStore.update(greeting);
+    public void updateGreeting(Long id, String content) {
+        Greeting greeting = repository.findOne(id);
+
+        if (greeting != null) {
+            greeting.setContent(content);
+            repository.save(greeting);
+        }
     }
 
     public Greeting createGreeting(String content) {
-        Greeting greeting = new Greeting(greetingStore.nextId(), content);
-        greetingStore.add(greeting);
+        Greeting greeting = new Greeting(content);
+        repository.save(greeting);
         return greeting;
+    }
+
+    public void deleteGreeting(Long id) {
+        repository.delete(id);
     }
 
 }

@@ -1,21 +1,38 @@
 package hello.domain;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.util.Date;
 import java.util.UUID;
 
+@Entity
 public class Greeting {
 
-    private String id;
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    @Column(nullable = false)
     private String content;
+
+    @Column(nullable = false)
     private Date dateCreated;
 
-    public Greeting(String id, String content) {
-        this.id = id;
+    protected Greeting() { }
+
+    public Greeting(String content) {
         this.content = content;
         this.dateCreated = new Date();
     }
 
-    public String getId() {
+    public Greeting(Long id, String content) {
+        this(content);
+        this.id = id;
+    }
+
+    public Long getId() {
         return id;
     }
 
@@ -39,6 +56,9 @@ public class Greeting {
     }
 
     public boolean equals(Greeting greeting) {
+        if (greeting.getId() == null && getId() == null) {
+            return greeting.getContent().equals(getContent());
+        }
         return greeting.getId().equals(getId());
     }
 

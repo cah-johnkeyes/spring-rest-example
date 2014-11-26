@@ -17,14 +17,8 @@ public class GreetingController {
 
     @ResponseBody
     @RequestMapping(value="/", method=RequestMethod.GET)
-    public List<Greeting> index() {
+    public Iterable<Greeting> index() {
         return greetingService.getAllGreetings();
-    }
-
-    @ResponseBody
-    @RequestMapping(value="/{id}", method=RequestMethod.GET)
-    public Greeting show(@PathVariable String id) {
-        return greetingService.getGreetingById(id);
     }
 
     @RequestMapping(value="/", method=RequestMethod.POST)
@@ -33,13 +27,24 @@ public class GreetingController {
         return redirectToGreeting(greeting.getId());
     }
 
+    @ResponseBody
+    @RequestMapping(value="/{id}", method=RequestMethod.GET)
+    public Greeting show(@PathVariable Long id) {
+        return greetingService.getGreetingById(id);
+    }
+
     @RequestMapping(value="/{id}", method=RequestMethod.PUT)
-    public String update(@PathVariable String id, @RequestParam String content) {
+    public String update(@PathVariable Long id, @RequestParam String content) {
         greetingService.updateGreeting(id, content);
         return redirectToGreeting(id);
     }
 
-    private String redirectToGreeting(String id) {
+    @RequestMapping(value="/{id}", method=RequestMethod.DELETE)
+    public void delete(@PathVariable Long id) {
+        greetingService.deleteGreeting(id);
+    }
+
+    private String redirectToGreeting(Long id) {
         return String.format("redirect:/greeting/%s", id);
     }
 

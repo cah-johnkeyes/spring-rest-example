@@ -1,23 +1,23 @@
 package hello.service
 
 import hello.domain.Greeting
-import hello.repository.GreetingStore
+import hello.repository.GreetingRepository
 import spock.lang.Specification
 
 class GreetingServiceSpec extends Specification {
 
     GreetingService service
-    GreetingStore greetingStoreMock
+    GreetingRepository greetingRepoMock
 
     def setup() {
-        greetingStoreMock = Mock(GreetingStore)
-        service = new GreetingService(greetingStore: greetingStoreMock)
+        greetingRepoMock = Mock(GreetingRepository)
+        service = new GreetingService(repository: greetingRepoMock)
     }
 
     def "it returns the proper greeting when given a greeting id"() {
         given:
-        def greeting = new Greeting('test', 'test')
-        greetingStoreMock.get(greeting.id) >> greeting
+        def greeting = new Greeting(1, 'content')
+        greetingRepoMock.findOne(greeting.id) >> greeting
 
         when:
         def result = service.getGreetingById(greeting.id)
@@ -29,10 +29,10 @@ class GreetingServiceSpec extends Specification {
     def "it lists all the greetings"() {
         given:
         def greetings = [
-            new Greeting('one', 'one'),
-            new Greeting('two', 'two')
+            new Greeting(1, 'one'),
+            new Greeting(2, 'two')
         ]
-        greetingStoreMock.list() >> greetings
+        greetingRepoMock.findAll() >> greetings
 
         when:
         def result = service.getAllGreetings()
@@ -43,26 +43,36 @@ class GreetingServiceSpec extends Specification {
 
     def "it creates new greetings"() {
         given:
-        def greeting = new Greeting('test', 'test')
-        greetingStoreMock.nextId() >> greeting.id
+        def greeting = new Greeting('content')
 
         when:
         service.createGreeting(greeting.content)
 
         then:
-        1 * greetingStoreMock.add(greeting)
+        1 * greetingRepoMock.save(greeting)
     }
 
     def "it updates greetings when given a greeting id and new content"() {
         given:
-        def greeting = new Greeting('test', 'test')
-        greetingStoreMock.get(greeting.id) >> greeting
+        def greeting = new Greeting(1, 'content')
+        greetingRepoMock.findOne(greeting.id) >> greeting
 
         when:
         service.updateGreeting(greeting.id, greeting.content)
 
         then:
-        1 * greetingStoreMock.update(greeting)
+        1 * greetingRepoMock.save(greeting)
+    }
+
+    def "it deletes a greeting when given a greeting id"() {
+        given:
+        def greeting = new Greeting(1, 'content')
+
+        when:
+        service.deleteGreeting(greeting.id)
+
+        then:
+        1 * greetingRepoMock.delete(greeting.id)
     }
 
 }
