@@ -19,6 +19,12 @@ public class GreetingService {
         return repository.findOne(id);
     }
 
+    public Greeting createGreeting(String content) {
+        Greeting greeting = new Greeting(content);
+        repository.save(greeting);
+        return greeting;
+    }
+
     public void updateGreeting(Long id, String content) {
         Greeting greeting = repository.findOne(id);
 
@@ -26,12 +32,6 @@ public class GreetingService {
             greeting.setContent(content);
             repository.save(greeting);
         }
-    }
-
-    public Greeting createGreeting(String content) {
-        Greeting greeting = new Greeting(content);
-        repository.save(greeting);
-        return greeting;
     }
 
     public void deleteGreeting(Long id) {
